@@ -29,6 +29,14 @@ function researchBoard() {
 }
 function openProject(i) {
   const p = projects[i];
+  window.Hobbies?.destroy();
+  projectDialog.classList.remove('hobby-dialog');
+  projectDialog.setAttribute('aria-label', '项目详情');
+  if (p.key === 'hobbies') {
+    window.Hobbies.open(projectDialog);
+    if (!projectDialog.open) showDialog(projectDialog);
+    return;
+  }
   document.querySelector('#project-detail').innerHTML = `<div class="detail-heading"><div class="mono">Portfolio ${number(i)} / UNPACKED <span>${p.en}</span></div><h2>${p.title}<small>${p.cn}</small></h2><p class="case-lead">${p.lead}</p><div class="detail-meta"><div><span>TYPE / 类型</span>${p.type}</div><div><span>ROLE / 职责</span>${p.role}</div>${p.year ? `<div><span>TIME / ${p.timeNote || '时间'}</span>${p.year}</div>` : ''}<div><span>OUTPUT / 交付内容</span>${p.deliverables}</div></div><p class="case-context">${p.context}</p></div><div class="case-metrics">${p.metrics.map(m => `<div><strong>${m[0]}</strong><span>${m[1]}</span></div>`).join('')}${p.metricNote ? `<p>${p.metricNote}</p>` : ''}</div>${p.cover ? projectImage(p.cover, p.coverCaption, true) : researchBoard()}<div class="detail-copy">${p.sections.map((s, n) => `<section><h3>${number(n)} / ${s[0]}</h3><p>${s[1]}</p></section>`).join('')}</div>${p.flow.length ? `<div class="case-flow"><span class="mono">${p.key === 'research' ? 'ANALYSIS FRAMEWORK / 分析框架' : 'EXPERIENCE & PROCESS / 体验与过程'}</span><ol>${p.flow.map((f, n) => `<li><small>${number(n)}</small>${f}</li>`).join('')}</ol></div>` : ''}${gallery(p)}${p.link ? `<div class="case-launch"><div><h3>让手势，成为你的输入。</h3><p>打开 Sakura Wish，体验樱花与身体动作的实时互动。</p></div><a class="text-action" href="${p.link}" target="_blank" rel="noopener noreferrer">体验互动网页 ↗</a></div>` : ''}<div class="detail-foot"><span>${p.context}</span><button class="next-project" data-next="${(i + 1) % projects.length}">下一份包裹　↗</button></div>`;
   if (!projectDialog.open) showDialog(projectDialog);
   projectDialog.scrollTop = 0;
@@ -54,6 +62,7 @@ document.addEventListener('click', e => {
   if (next) { openProject(Number(next.dataset.next)); projectDialog.querySelector('.close-dialog').focus(); }
   const picture = e.target.closest('[data-image]');
   if (picture) openImage(picture.dataset.image, picture.querySelector('img').alt);
+  if (e.target.closest('.hobby-trigger')) openProject(projects.findIndex(p => p.key === 'hobbies'));
   if (e.target.closest('.profile-trigger')) showDialog(profileDialog);
   if (e.target.closest('.close-dialog')) e.target.closest('dialog').close();
 });
@@ -64,6 +73,7 @@ document.querySelector('#image-zoom').addEventListener('click', e => {
 });
 for (const d of document.querySelectorAll('dialog')) {
   d.addEventListener('close', () => {
+    if (d === projectDialog) window.Hobbies?.destroy();
     document.body.style.overflow = document.querySelector('dialog[open]') ? 'hidden' : '';
     const trigger = returnFocus.get(d);
     if (trigger?.isConnected) trigger.focus({ preventScroll: true });

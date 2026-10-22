@@ -498,5 +498,19 @@ const projects = [
         "caption": "景观作品集 · 原始第 17 页"
       }
     ]
+  },
+  {
+    "key": "hobbies",
+    "title": "兴趣爱好",
+    "label": "兴趣爱好",
+    "en": "OFF THE CLOCK / PERSONAL ARCHIVE",
+    "cn": "把热爱，装进另一个包裹",
+    "type": "生活与创意记录",
+    "role": "美工 / 物料 / 剪辑 / 舞蹈",
+    "labelRole": "为喜欢而创作",
+    "year": "",
+    "format": "PERSONAL ARCHIVE",
+    "material": "soft",
+    "gallery": []
   }
 ];
